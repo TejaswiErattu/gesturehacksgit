@@ -464,6 +464,41 @@
         color: var(--slate-gray);
       }
 
+      /* Testimonial meta (avatar + human name/role) */
+      .quote-meta {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        margin-top: 1rem;
+      }
+
+      .avatar {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.12), transparent 25%), linear-gradient(135deg, var(--muse-indigo), var(--golden-amber));
+        box-shadow: 0 6px 18px rgba(75,62,145,0.12);
+      }
+
+      .meta-text {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .quote-name {
+        color: var(--muse-indigo);
+        font-weight: 700;
+        font-size: 0.95rem;
+        margin-bottom: 0.15rem;
+      }
+
+      .quote-role-location {
+        font-size: 0.9rem;
+        color: var(--slate-gray);
+        opacity: 0.95;
+      }
+
       /* Pilot CTA */
       .pilot-cta {
         background: linear-gradient(135deg, var(--muse-indigo) 0%, #3a2f7a 100%);
@@ -834,16 +869,26 @@
               <p class="quote-text">
                 "My sophomores stopped memorizing and started connecting the dots. The difference in their understanding is remarkable."
               </p>
-              <div class="quote-author">A. Rivera</div>
-              <div class="quote-role">HS History</div>
+              <div class="quote-meta">
+                <div class="avatar" aria-hidden="true"></div>
+                <div class="meta-text">
+                  <div class="quote-name">— Sarah Chen</div>
+                  <div class="quote-role-location">High School History Teacher, Seattle</div>
+                </div>
+              </div>
             </div>
             
             <div class="quote-card">
               <p class="quote-text">
                 "The reflection prompts changed how my class talks about science. Students ask deeper questions and make connections I never expected."
               </p>
-              <div class="quote-author">M. Patel</div>
-              <div class="quote-role">Chemistry</div>
+              <div class="quote-meta">
+                <div class="avatar" aria-hidden="true"></div>
+                <div class="meta-text">
+                  <div class="quote-name">— Miguel Patel</div>
+                  <div class="quote-role-location">High School Chemistry Teacher, Portland</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
