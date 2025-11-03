@@ -322,6 +322,53 @@
         animation: fadeIn 0.3s ease;
       }
 
+      /* Loading and typing visuals */
+      .loading-overlay {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        inset: 0;
+        background: rgba(255,255,255,0.85);
+        border-radius: 12px;
+        z-index: 30;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem 2rem;
+      }
+
+      .loading-overlay.show {
+        display: flex;
+        animation: fadeIn 0.25s ease;
+      }
+
+      .loader-ring {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 5px solid rgba(75,62,145,0.15);
+        border-top-color: var(--muse-indigo);
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      .typing { white-space: pre-wrap; }
+      .cursor {
+        display: inline-block;
+        width: 8px;
+        height: 1em;
+        background: var(--muse-indigo);
+        vertical-align: text-bottom;
+        margin-left: 3px;
+        animation: blink 1s steps(2,start) infinite;
+      }
+
+      @keyframes blink { to { visibility: hidden; } }
+
+
       @keyframes fadeIn {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
@@ -745,7 +792,14 @@
               <button class="demo-button" onclick="generateStorySpark()">Generate Story Spark</button>
             </div>
             
-            <div id="demo-output" class="demo-output" role="status" aria-live="polite">
+              <div class="demo-output-wrapper" style="position: relative;">
+                <div id="demo-loading" class="loading-overlay" aria-hidden="true">
+                  <div class="loader-ring" aria-hidden="true"></div>
+                  <div style="color:var(--muse-indigo); font-weight:600;">Muse is shaping your story spark…</div>
+                  <div style="color:var(--slate-gray); font-size:0.95rem;">This usually takes 2–3 seconds.</div>
+                </div>
+
+                <div id="demo-output" class="demo-output" role="status" aria-live="polite">
               <div class="output-section">
                 <h4>Metaphor:</h4>
                 <p id="metaphor-output"></p>
@@ -762,10 +816,11 @@
               </div>
               
               <div class="output-actions">
-                <button class="btn-secondary" onclick="copyToClipboard()">Copy to Clipboard</button>
+                <button class="btn-secondary" onclick="copyToClipboard(event)">Copy to Clipboard</button>
                 <button class="btn-secondary" onclick="downloadSpark()">Download Spark (.txt)</button>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </section>
@@ -941,29 +996,57 @@
           return;
         }
 
-        // Generate metaphor
-        const metaphor = `${topic} is ${getRandomItem(metaphorFrames[tone])}`;
-
-        // Generate mini-story
-        const setting = getRandomItem(storySettings);
-        const character = getRandomItem(characters);
-        const story = `${setting}, ${character} encounter ${topic.toLowerCase()}. They discover that it works by... [Continue the story to show how ${topic.toLowerCase()} functions in this everyday context, making the abstract concept tangible and relatable.]`;
-
-        // Generate reflection prompts
-        const prompts = getRandomItems(reflectionStarters[grade], 2);
-
-        // Display results
-        document.getElementById('metaphor-output').textContent = metaphor;
-        document.getElementById('story-output').textContent = story;
-        document.getElementById('prompts-output').innerHTML = prompts.map((prompt, index) => `${index + 1}. ${prompt}`).join('<br>');
-
-        // Store current spark for download/copy
-        currentSpark = `Story Spark: ${topic}\n\nMetaphor:\n${metaphor}\n\nMini-Story:\n${story}\n\nReflection Prompts:\n${prompts.map((prompt, index) => `${index + 1}. ${prompt}`).join('\n')}`;
-
-        // Show output
         const output = document.getElementById('demo-output');
+        const loader = document.getElementById('demo-loading');
+
+        // Show the output container (so transitions feel natural) and show loader overlay
         output.classList.add('show');
-        output.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        loader.classList.add('show');
+        loader.setAttribute('aria-hidden', 'false');
+
+        // Realistic generation time between 2000 and 3200 ms
+        const generationDelay = 2000 + Math.floor(Math.random() * 1200);
+
+        // Ensure the UI announces something for screen readers while loading
+        document.getElementById('metaphor-output').textContent = '';
+        document.getElementById('story-output').textContent = '';
+        document.getElementById('prompts-output').textContent = '';
+
+        // Disable the generate button briefly to prevent double clicks
+        const genBtn = document.querySelector('.demo-button');
+        genBtn.disabled = true;
+        genBtn.setAttribute('aria-busy', 'true');
+
+        setTimeout(async () => {
+          // Pick a warm, human-flavored template based on keywords
+          const template = generateTemplateForTopic(topic, tone, grade);
+
+          // Hide loader and type the outputs like a helpful Muse assistant
+          loader.classList.remove('show');
+          loader.setAttribute('aria-hidden', 'true');
+
+          const reduced = prefersReducedMotion();
+          const baseSpeed = reduced ? 0 : (18 + Math.floor(Math.random() * 12)); // ms per char
+
+          // Type metaphor, then story, then prompts with small pauses for realism
+          await typeText(document.getElementById('metaphor-output'), template.metaphor, { speed: baseSpeed });
+          await wait(220);
+          await typeText(document.getElementById('story-output'), template.story, { speed: baseSpeed });
+          await wait(300);
+          // For prompts, join them into numbered lines
+          const promptsText = template.prompts.map((p, i) => `${i + 1}. ${p}`).join('\n\n');
+          await typeText(document.getElementById('prompts-output'), promptsText, { speed: baseSpeed });
+
+          // Build currentSpark for clipboard/download
+          currentSpark = `Story Spark: ${topic}\n\nMetaphor:\n${template.metaphor}\n\nMini-Story:\n${template.story}\n\nReflection Prompts:\n${template.prompts.map((p, i) => `${i+1}. ${p}`).join('\n')}`;
+
+          // Re-enable button
+          genBtn.disabled = false;
+          genBtn.removeAttribute('aria-busy');
+
+          // Smooth scroll the output into view once fully typed
+          output.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'nearest' });
+        }, generationDelay);
       }
 
       function getRandomItem(array) {
@@ -975,14 +1058,122 @@
         return shuffled.slice(0, count);
       }
 
-      function copyToClipboard() {
+      // Small utility to pause
+      function wait(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+
+      function prefersReducedMotion() {
+        try {
+          return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      // Escape text for safe HTML insertion
+      function escapeHtml(text) {
+        const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+        return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
+      }
+
+      // Typing animation into an element. Options: speed (ms per char). If speed === 0, write instantly.
+      function typeText(el, text, options = {}) {
+        const speed = options.speed == null ? 20 : options.speed;
+        // Ensure pre-wrap so line breaks show
+        el.classList.add('typing');
+        el.setAttribute('data-typed', '');
+
+        if (!speed) {
+          // Instant write
+          el.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+          return Promise.resolve();
+        }
+
+        return new Promise(resolve => {
+          let i = 0;
+          const total = text.length;
+          const cursorSpan = '<span class="cursor" aria-hidden="true"></span>';
+
+          function step() {
+            i++;
+            const partial = escapeHtml(text.slice(0, i)).replace(/\n/g, '<br>');
+            el.innerHTML = partial + cursorSpan;
+            if (i < total) {
+              // Variable speed to feel more human: small chance to pause slightly
+              const jitter = Math.random() < 0.04 ? 120 + Math.random() * 220 : 0;
+              setTimeout(step, speed + jitter);
+            } else {
+              // Done
+              el.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+              resolve();
+            }
+          }
+
+          // Start with a small delay to simulate thinking
+          setTimeout(step, 120 + Math.random() * 120);
+        });
+      }
+
+      // Choose a pre-written warm Muse-style template based on topic keywords
+      function generateTemplateForTopic(topic, tone, grade) {
+        const t = topic.toLowerCase();
+
+        const historical = {
+          metaphor: `${topic} is like a small spark that builds into a shared story — a moment that changes how people see the world.`,
+          story: `Imagine a classroom where your students step into the shoes of people who lived through ${topic}. One student becomes a messenger racing through town, another keeps a hidden diary. Together they discover that the "big event" was made of many small decisions, fear, hope, and ordinary choices. Through the story, the causes, consequences, and human costs become clear — not as dates, but as lived experience that asks, "What would you have done?"`,
+          prompts: [
+            `Which character's choice surprised you — and why might they have acted that way?`,
+            `How did ordinary people shape the larger events of ${topic}?`,
+            `If you could change one decision in this story, what might happen next?`
+          ]
+        };
+
+        const science = {
+          metaphor: `${topic} is like a quiet conversation under the surface — small exchanges that together keep the world running.`,
+          story: `Picture a tiny laboratory in a school where a curious student watches ${topic} through a magnifying lens. At first it seems mysterious, but as they tinker, test, and ask questions they begin to map the invisible rules that govern it. What seemed like magic becomes a pattern, and that pattern opens the door to experiments, failures, and surprising discoveries. This story invites students to try, observe, and wonder.`,
+          prompts: [
+            `What would you predict happens if we change one variable in this system?`,
+            `Which evidence in the story convinced you, and why?`,
+            `How could you test the idea in a simple hands-on experiment?`
+          ]
+        };
+
+        const math = {
+          metaphor: `${topic} is like a map to a hidden treasure — the symbols and steps show the route, and each equation is a clue.`,
+          story: `In this mini-story, a group of students find a mystery that can only be solved with ${topic}. At first the clues are confusing, but as they translate the clues into equations and diagrams, the path grows clearer. The process shows that math is less about right answers and more about strategies for making sense of puzzles — a tool for curiosity and cleverness.`,
+          prompts: [
+            `Which step in the solution felt most like a creative move?`,
+            `How would you explain this strategy to a friend who hates math?`,
+            `Can you find a different path that leads to the same answer?`
+          ]
+        };
+
+        const generic = {
+          metaphor: `${topic} is like a friendly guide that helps you notice the unseen connections in everyday life.`,
+          story: `Think of ${topic} as a story you carry with you. A student notices it in the world — in a backyard, a bus ride, or a kitchen — and that curiosity leads them to ask one small question. That question unfolds into a short exploration, some guesswork, and finally a clearer idea that they can share with others. The emphasis is on curiosity, failing forward, and the joy of understanding.`,
+          prompts: [
+            `What everyday example helped you understand this idea better?`,
+            `Which part of the story would you expand into a longer activity?`,
+            `What question would you ask next to learn more?`
+          ]
+        };
+
+        // Keyword detection
+        if (/history|revolution|war|empire|independence|colonial/.test(t)) return historical;
+        if (/science|chemistry|biology|physics|photosynthesis|cells|reaction|molecule/.test(t)) return science;
+        if (/math|algebra|geometry|equation|quadratic|calculus|trigonometry/.test(t)) return math;
+        return generic;
+      }
+
+      function copyToClipboard(event) {
+        const button = event && event.target ? event.target : null;
         navigator.clipboard.writeText(currentSpark).then(function() {
-          const button = event.target;
-          const originalText = button.textContent;
-          button.textContent = 'Copied!';
-          setTimeout(() => {
-            button.textContent = originalText;
-          }, 2000);
+          if (button) {
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            setTimeout(() => { button.textContent = originalText; }, 2000);
+          }
         }).catch(function(err) {
           console.error('Could not copy text: ', err);
           // Fallback for older browsers
@@ -992,13 +1183,11 @@
           textArea.select();
           document.execCommand('copy');
           document.body.removeChild(textArea);
-          
-          const button = event.target;
-          const originalText = button.textContent;
-          button.textContent = 'Copied!';
-          setTimeout(() => {
-            button.textContent = originalText;
-          }, 2000);
+          if (button) {
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            setTimeout(() => { button.textContent = originalText; }, 2000);
+          }
         });
       }
 
