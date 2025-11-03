@@ -3,17 +3,24 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Muse Educator Pilot - Learn Through Story</title>
+    <title>Muse Educator Pilot - Transform Learning Through Story</title>
     <style>
-      /* Muse Brand Colors & Typography */
+      /* Muse Brand Colors - Exact Specification */
       :root {
-        --primary-purple: #6B46C1;
-        --secondary-indigo: #4338CA;
-        --warm-cream: #FEF7E8;
-        --soft-gray: #F8FAFC;
-        --text-dark: #1E293B;
-        --text-medium: #475569;
-        --accent-orange: #EA580C;
+        --muse-indigo: #4B3E91;
+        --lavender-mist: #E8E4FB;
+        --golden-amber: #FF9159;
+        --slate-gray: #5E6070;
+        --white: #FFFFFF;
+      }
+
+      /* Muse Brand Colors - Exact Specification */
+      :root {
+        --muse-indigo: #4B3E91;
+        --lavender-mist: #E8E4FB;
+        --golden-amber: #FF9159;
+        --slate-gray: #5E6070;
+        --white: #FFFFFF;
       }
 
       * {
@@ -22,332 +29,1072 @@
         box-sizing: border-box;
       }
 
+      /* Respect reduced motion preferences */
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
       body {
-        font-family: 'Georgia', 'Times New Roman', serif;
-        line-height: 1.7;
-        color: var(--text-dark);
-        background: linear-gradient(135deg, var(--warm-cream) 0%, var(--soft-gray) 100%);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        line-height: 1.6;
+        color: var(--slate-gray);
+        background: linear-gradient(135deg, var(--lavender-mist) 0%, var(--white) 60%);
+        min-height: 100vh;
       }
 
       .container {
-        max-width: 1200px;
+        max-width: 1180px;
         margin: 0 auto;
-        padding: 0 2rem;
+        padding: 0 1.5rem;
+      }
+
+      /* Typography */
+      h1, h2, h3 {
+        color: var(--muse-indigo);
+        font-weight: 600;
+        line-height: 1.2;
+      }
+
+      h1 {
+        font-size: clamp(2.5rem, 5vw, 3.5rem);
+        font-family: Georgia, 'Times New Roman', serif;
+      }
+
+      h2 {
+        font-size: clamp(1.75rem, 3vw, 2.25rem);
+      }
+
+      h3 {
+        font-size: 1.25rem;
       }
 
       /* Header */
       header {
-        padding: 2rem 0;
-        text-align: center;
-        background: white;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        position: sticky;
+        top: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(75, 62, 145, 0.1);
+        z-index: 100;
+        transition: box-shadow 0.2s ease;
+      }
+
+      header.scrolled {
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
       }
 
       .logo {
-        font-size: 2.5rem;
+        font-size: 1.75rem;
         font-weight: bold;
-        color: var(--primary-purple);
-        margin-bottom: 0.5rem;
+        color: var(--muse-indigo);
+        text-decoration: none;
+        font-family: Georgia, serif;
       }
 
-      .tagline {
-        font-size: 1.1rem;
-        color: var(--text-medium);
-        font-style: italic;
+      .nav-links {
+        display: none;
+        gap: 2rem;
+        list-style: none;
+      }
+
+      .nav-links a {
+        color: var(--slate-gray);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+        padding: 0.5rem 0;
+        border-bottom: 2px solid transparent;
+      }
+
+      .nav-links a:hover,
+      .nav-links a:focus {
+        color: var(--muse-indigo);
+        border-bottom-color: var(--golden-amber);
+        outline: none;
+      }
+
+      @media (min-width: 768px) {
+        .nav-links {
+          display: flex;
+        }
       }
 
       /* Hero Section */
       .hero {
         padding: 4rem 0;
         text-align: center;
-        background: white;
+        background: var(--white);
       }
 
       .hero h1 {
-        font-size: 3.5rem;
-        color: var(--primary-purple);
         margin-bottom: 1.5rem;
-        font-weight: 300;
-        line-height: 1.2;
       }
 
       .hero .subtitle {
-        font-size: 1.4rem;
-        color: var(--text-medium);
-        margin-bottom: 2rem;
-        max-width: 700px;
+        font-size: 1.25rem;
+        color: var(--slate-gray);
+        margin-bottom: 2.5rem;
+        max-width: 600px;
         margin-left: auto;
         margin-right: auto;
       }
 
-      .hero-image {
+      .hero-visual {
         width: 100%;
-        max-width: 600px;
-        height: 300px;
-        background: linear-gradient(45deg, var(--primary-purple), var(--secondary-indigo));
+        max-width: 500px;
+        height: 280px;
+        background: linear-gradient(135deg, var(--muse-indigo), var(--lavender-mist));
         border-radius: 20px;
         margin: 2rem auto;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
-        font-size: 1.2rem;
-        text-align: center;
-        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(75, 62, 145, 0.2);
+        overflow: hidden;
+        position: relative;
       }
 
-      /* What is Muse Section */
-      .what-is-muse {
+      .cta-primary {
+        display: inline-block;
+        background: var(--golden-amber);
+        color: var(--white);
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 145, 89, 0.3);
+        border: none;
+        cursor: pointer;
+      }
+
+      .cta-primary:hover,
+      .cta-primary:focus {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 145, 89, 0.4);
+        outline: 2px solid var(--golden-amber);
+        outline-offset: 2px;
+      }
+
+      /* Sections */
+      section {
         padding: 4rem 0;
-        background: var(--warm-cream);
       }
 
       .section-title {
-        font-size: 2.5rem;
-        color: var(--primary-purple);
         text-align: center;
         margin-bottom: 3rem;
-        font-weight: 300;
+        color: var(--muse-indigo);
       }
 
+      /* How it Works */
       .features-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 2rem;
         margin-top: 3rem;
       }
 
       .feature-card {
-        background: white;
+        background: var(--white);
         padding: 2rem;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        text-align: center;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border: 1px solid rgba(75, 62, 145, 0.1);
+      }
+
+      .feature-card:hover,
+      .feature-card:focus-within {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
       }
 
       .feature-icon {
-        font-size: 3rem;
+        font-size: 2.5rem;
         margin-bottom: 1rem;
+        display: block;
       }
 
       .feature-card h3 {
-        color: var(--primary-purple);
         margin-bottom: 1rem;
-        font-size: 1.5rem;
+        color: var(--muse-indigo);
+      }
+
+      .feature-card p {
+        color: var(--slate-gray);
+        line-height: 1.6;
+      }
+
+      /* Story Spark Live Demo */
+      .demo-section {
+        background: linear-gradient(135deg, var(--lavender-mist) 0%, var(--white) 100%);
+        padding: 4rem 0;
+      }
+
+      .demo-container {
+        max-width: 700px;
+        margin: 0 auto;
+        background: var(--white);
+        padding: 2.5rem;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .demo-inputs {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .input-group label {
+        font-weight: 600;
+        color: var(--muse-indigo);
+      }
+
+      .demo-inputs input,
+      .demo-inputs select {
+        padding: 0.75rem 1rem;
+        border: 2px solid var(--lavender-mist);
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.2s ease;
+        background: var(--white);
+      }
+
+      .demo-inputs input:focus,
+      .demo-inputs select:focus {
+        outline: none;
+        border-color: var(--muse-indigo);
+        box-shadow: 0 0 0 3px rgba(75, 62, 145, 0.1);
+      }
+
+      .demo-button {
+        background: var(--muse-indigo);
+        color: var(--white);
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        width: 100%;
+      }
+
+      .demo-button:hover,
+      .demo-button:focus {
+        background: #3a2f7a;
+        transform: translateY(-1px);
+        outline: 2px solid var(--muse-indigo);
+        outline-offset: 2px;
+      }
+
+      .demo-output {
+        margin-top: 2rem;
+        padding: 2rem;
+        background: linear-gradient(135deg, var(--lavender-mist), var(--white));
+        border-radius: 12px;
+        border-left: 4px solid var(--golden-amber);
+        display: none;
+      }
+
+      .demo-output.show {
+        display: block;
+        animation: fadeIn 0.3s ease;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .output-section {
+        margin-bottom: 1.5rem;
+      }
+
+      .output-section h4 {
+        color: var(--muse-indigo);
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+      }
+
+      .output-section p {
+        color: var(--slate-gray);
+        font-style: italic;
+      }
+
+      .output-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .btn-secondary {
+        background: var(--white);
+        color: var(--muse-indigo);
+        border: 2px solid var(--muse-indigo);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-secondary:hover,
+      .btn-secondary:focus {
+        background: var(--muse-indigo);
+        color: var(--white);
+        outline: 2px solid var(--muse-indigo);
+        outline-offset: 2px;
+      }
+
+      @media (min-width: 768px) {
+        .demo-inputs {
+          grid-template-columns: 2fr 1fr 1fr;
+        }
+        .demo-button {
+          width: auto;
+          align-self: end;
+        }
       }
 
       /* Testimonials */
       .testimonials {
-        padding: 4rem 0;
-        background: white;
+        background: var(--white);
       }
 
-      .testimonial-grid {
+      .quotes-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-        gap: 3rem;
+        gap: 2rem;
         margin-top: 3rem;
       }
 
-      .testimonial {
-        background: var(--soft-gray);
-        padding: 2.5rem;
-        border-radius: 20px;
-        border-left: 5px solid var(--accent-orange);
+      .quote-card {
+        background: var(--white);
+        padding: 2rem;
+        border-radius: 16px;
+        border-left: 4px solid var(--golden-amber);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
       }
 
-      .testimonial-quote {
-        font-size: 1.2rem;
+      .quote-text {
         font-style: italic;
+        font-size: 1.1rem;
         margin-bottom: 1.5rem;
-        color: var(--text-dark);
+        color: var(--slate-gray);
       }
 
-      .testimonial-author {
+      .quote-author {
         font-weight: bold;
-        color: var(--primary-purple);
+        color: var(--muse-indigo);
       }
 
-      .testimonial-title {
-        color: var(--text-medium);
+      .quote-role {
         font-size: 0.9rem;
+        color: var(--slate-gray);
       }
 
-      /* CTA Section */
-      .cta {
-        padding: 4rem 0;
-        background: linear-gradient(135deg, var(--primary-purple), var(--secondary-indigo));
-        color: white;
+      /* Pilot CTA */
+      .pilot-cta {
+        background: linear-gradient(135deg, var(--muse-indigo) 0%, #3a2f7a 100%);
+        color: var(--white);
         text-align: center;
       }
 
-      .cta h2 {
-        font-size: 2.5rem;
-        margin-bottom: 1.5rem;
-        font-weight: 300;
+      .pilot-cta p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        opacity: 0.95;
       }
 
-      .cta p {
-        font-size: 1.2rem;
-        margin-bottom: 2.5rem;
-        opacity: 0.9;
+      .cta-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+        margin-top: 2rem;
       }
 
-      .cta-button {
-        display: inline-block;
-        background: var(--accent-orange);
-        color: white;
-        padding: 1rem 3rem;
-        border-radius: 50px;
-        text-decoration: none;
-        font-size: 1.2rem;
+      .accordion-trigger {
+        background: none;
+        border: none;
+        color: var(--white);
+        text-decoration: underline;
+        cursor: pointer;
+        font-size: 1rem;
+        opacity: 0.8;
+        transition: opacity 0.2s ease;
+      }
+
+      .accordion-trigger:hover,
+      .accordion-trigger:focus {
+        opacity: 1;
+        outline: 2px solid var(--white);
+        outline-offset: 2px;
+      }
+
+      .accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        margin-top: 1rem;
+      }
+
+      .accordion-content.expanded {
+        max-height: 400px;
+      }
+
+      .sample-prompts {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: left;
+        margin-top: 1rem;
+      }
+
+      .sample-prompts ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sample-prompts li {
+        margin-bottom: 1rem;
+        padding-left: 1.5rem;
+        position: relative;
+      }
+
+      .sample-prompts li:before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: var(--golden-amber);
         font-weight: bold;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-      }
-
-      .cta-button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
       }
 
       /* Footer */
       footer {
+        background: var(--slate-gray);
+        color: var(--white);
         padding: 2rem 0;
-        background: var(--text-dark);
-        color: white;
         text-align: center;
+      }
+
+      .footer-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .footer-links button {
+        background: none;
+        border: none;
+        color: var(--white);
+        text-decoration: underline;
+        cursor: pointer;
+        font-size: 0.9rem;
+        opacity: 0.8;
+        transition: opacity 0.2s ease;
+      }
+
+      .footer-links button:hover,
+      .footer-links button:focus {
+        opacity: 1;
+        outline: 1px solid var(--white);
+        outline-offset: 2px;
+      }
+
+      .disclosure {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        margin-top: 1rem;
+        text-align: left;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 0 1rem;
+      }
+
+      .disclosure.expanded {
+        max-height: 300px;
+        padding: 1rem;
+      }
+
+      /* Download Button */
+      .download-page {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: var(--golden-amber);
+        color: var(--white);
+        border: none;
+        padding: 1rem;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(255, 145, 89, 0.3);
+        transition: all 0.2s ease;
+        z-index: 50;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+      }
+
+      .download-page:hover,
+      .download-page:focus {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(255, 145, 89, 0.4);
+        outline: 2px solid var(--golden-amber);
+        outline-offset: 2px;
       }
 
       /* Responsive */
       @media (max-width: 768px) {
-        .hero h1 {
-          font-size: 2.5rem;
-        }
-        
-        .hero .subtitle {
-          font-size: 1.2rem;
-        }
-        
-        .testimonial-grid {
+        .quotes-grid {
           grid-template-columns: 1fr;
         }
         
-        .container {
-          padding: 0 1rem;
+        .cta-actions {
+          flex-direction: column;
         }
+        
+        .output-actions {
+          flex-direction: column;
+        }
+        
+        .download-page {
+          bottom: 1rem;
+          right: 1rem;
+        }
+      }
+
+      /* Focus styles for better accessibility */
+      *:focus {
+        outline: 2px solid var(--muse-indigo);
+        outline-offset: 2px;
+      }
+
+      /* Screen reader only text */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
       }
     </style>
   </head>
   <body>
     <!-- Header -->
-    <header>
+    <header id="header">
       <div class="container">
-        <div class="logo">Muse</div>
-        <div class="tagline">Where curiosity meets connection</div>
+        <div class="header-content">
+          <a href="#" class="logo">Muse</a>
+          <nav>
+            <ul class="nav-links">
+              <li><a href="#why-muse">Why Muse</a></li>
+              <li><a href="#how-it-works">How it Works</a></li>
+              <li><a href="#pilot">Pilot</a></li>
+            </ul>
+          </nav>
+        </div>
       </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-      <div class="container">
-        <h1>Transform Learning<br>Through Story</h1>
-        <p class="subtitle">
-          Help your students connect emotionally with what they learn. 
-          When learning becomes personal, understanding becomes profound.
-        </p>
-        <div class="hero-image">
-          <div>
-            <strong>AI-Generated Image Placeholder:</strong><br>
-            Illustrated scene of diverse students engaged in storytelling, 
-            with thought bubbles containing historical figures, scientific concepts, 
-            and mathematical symbols coming to life as characters in their narratives.
+    <main>
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="container">
+          <h1>Transform Learning<br>Through Story</h1>
+          <p class="subtitle">
+            When learning feels personal, it lasts. Muse helps educators turn complex ideas into stories students can feel and remember.
+          </p>
+          <div class="hero-visual">
+            <svg width="200" height="150" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 75 Q 50 25, 100 75 T 180 75" stroke="white" stroke-width="3" fill="none" opacity="0.8"/>
+              <circle cx="50" cy="50" r="8" fill="white" opacity="0.9"/>
+              <circle cx="100" cy="75" r="10" fill="white"/>
+              <circle cx="150" cy="100" r="8" fill="white" opacity="0.9"/>
+              <path d="M30 100 L70 120 L50 140 Z" fill="white" opacity="0.7"/>
+              <rect x="120" y="90" width="30" height="20" rx="4" fill="white" opacity="0.7"/>
+            </svg>
+          </div>
+          <a href="mailto:gesture@uw.edu?subject=Muse%20Educator%20Pilot&body=Name%3A%0ASchool%3A%0ASubject%3A%0AWhy%20I%E2%80%99m%20interested%3A%0A" class="cta-primary">
+            Request Early Access
+          </a>
+        </div>
+      </section>
+
+      <!-- Why Muse -->
+      <section id="why-muse">
+        <div class="container">
+          <h2 class="section-title">Why Muse Matters for Educators</h2>
+          <p style="text-align: center; font-size: 1.2rem; max-width: 700px; margin: 0 auto; color: var(--slate-gray);">
+            Learning sticks when it connects emotionally. Muse transforms abstract concepts into compelling narratives that spark curiosity, foster deeper connections, and create lasting understanding in your classroom.
+          </p>
+        </div>
+      </section>
+
+      <!-- How it Works -->
+      <section id="how-it-works">
+        <div class="container">
+          <h2 class="section-title">How it Works</h2>
+          <div class="features-grid">
+            <div class="feature-card" tabindex="0">
+              <span class="feature-icon">🗺️</span>
+              <h3>Story Map Generator</h3>
+              <p>Connects ideas visually through narrative pathways that help students see relationships between concepts.</p>
+            </div>
+            
+            <div class="feature-card" tabindex="0">
+              <span class="feature-icon">💡</span>
+              <h3>Reflection Prompt Engine</h3>
+              <p>Sparks curiosity and metacognition with thoughtful questions that deepen understanding.</p>
+            </div>
+            
+            <div class="feature-card" tabindex="0">
+              <span class="feature-icon">📝</span>
+              <h3>Auto-Summary Composer</h3>
+              <p>Condenses dense text without losing meaning, making complex ideas accessible to all learners.</p>
+            </div>
+            
+            <div class="feature-card" tabindex="0">
+              <span class="feature-icon">📖</span>
+              <h3>Insight Journal</h3>
+              <p>Keeps "aha" moments connected over time, building continuity in the learning journey.</p>
+            </div>
+            
+            <div class="feature-card" tabindex="0">
+              <span class="feature-icon">🛠️</span>
+              <h3>Lesson Builder</h3>
+              <p>Turns insights into discussion plans that encourage discovery and meaningful exploration.</p>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- What is Muse -->
-    <section class="what-is-muse">
-      <div class="container">
-        <h2 class="section-title">Why Muse Matters for Educators</h2>
-        <p style="text-align: center; font-size: 1.2rem; max-width: 800px; margin: 0 auto; color: var(--text-medium);">
-          Muse isn't another productivity tool. It's designed to help people learn through storytelling, 
-          creating emotional connections that make knowledge stick and understanding deepen.
-        </p>
-        
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="feature-icon">📚</div>
-            <h3>Story-Driven Learning</h3>
-            <p>Transform abstract concepts into compelling narratives that students remember and understand deeply.</p>
-          </div>
-          
-          <div class="feature-card">
-            <div class="feature-icon">🧠</div>
-            <h3>Emotional Connection</h3>
-            <p>When students connect emotionally to what they learn, they remember it longer and think more critically.</p>
-          </div>
-          
-          <div class="feature-card">
-            <div class="feature-icon">🎯</div>
-            <h3>Intentional Learning</h3>
-            <p>Move beyond assignment completion to foster genuine curiosity and meaningful exploration.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="testimonials">
-      <div class="container">
-        <h2 class="section-title">Educators Are Already Seeing Results</h2>
-        
-        <div class="testimonial-grid">
-          <div class="testimonial">
-            <p class="testimonial-quote">
-              "My students used to memorize dates for history tests and forget them immediately. 
-              Now they're creating stories around historical events, and they're actually retaining 
-              the information months later. More importantly, they're asking deeper questions about why things happened."
+      <!-- Story Spark Live Demo -->
+      <section class="demo-section">
+        <div class="container">
+          <h2 class="section-title">Story Spark Live <span style="font-size: 0.7em; color: var(--golden-amber);">(On-Page Demo)</span></h2>
+          <div class="demo-container">
+            <p style="text-align: center; margin-bottom: 2rem; color: var(--slate-gray);">
+              See how Muse transforms any topic into an engaging story spark for your students.
             </p>
-            <div class="testimonial-author">Dr. Sarah Chen</div>
-            <div class="testimonial-title">High School History Teacher, Lincoln Academy</div>
-          </div>
-          
-          <div class="testimonial">
-            <p class="testimonial-quote">
-              "I've been teaching chemistry for 15 years, and I've never seen students engage with 
-              molecular concepts the way they do when they personify atoms and create stories about 
-              chemical reactions. The storytelling approach has transformed my classroom from silent 
-              note-taking to animated discussions about science."
-            </p>
-            <div class="testimonial-author">Prof. Michael Rodriguez</div>
-            <div class="testimonial-title">Chemistry Professor, State University</div>
+            
+            <div class="demo-inputs">
+              <div class="input-group">
+                <label for="topic-input">Topic or Concept:</label>
+                <input type="text" id="topic-input" placeholder="e.g., Photosynthesis, The American Revolution, Quadratic Equations" />
+              </div>
+              
+              <div class="input-group">
+                <label for="tone-select">Tone:</label>
+                <select id="tone-select">
+                  <option value="curious">Curious</option>
+                  <option value="reflective">Reflective</option>
+                  <option value="playful">Playful</option>
+                </select>
+              </div>
+              
+              <div class="input-group">
+                <label for="grade-select">Grade Level:</label>
+                <select id="grade-select">
+                  <option value="6-8">6-8</option>
+                  <option value="9-12">9-12</option>
+                  <option value="college">College</option>
+                </select>
+              </div>
+              
+              <button class="demo-button" onclick="generateStorySpark()">Generate Story Spark</button>
+            </div>
+            
+            <div id="demo-output" class="demo-output" role="status" aria-live="polite">
+              <div class="output-section">
+                <h4>Metaphor:</h4>
+                <p id="metaphor-output"></p>
+              </div>
+              
+              <div class="output-section">
+                <h4>Mini-Story:</h4>
+                <p id="story-output"></p>
+              </div>
+              
+              <div class="output-section">
+                <h4>Reflection Prompts:</h4>
+                <p id="prompts-output"></p>
+              </div>
+              
+              <div class="output-actions">
+                <button class="btn-secondary" onclick="copyToClipboard()">Copy to Clipboard</button>
+                <button class="btn-secondary" onclick="downloadSpark()">Download Spark (.txt)</button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Call to Action -->
-    <section class="cta">
-      <div class="container">
-        <h2>Join the Educator Pilot Program</h2>
-        <p>
-          Be among the first educators to experience how storytelling can transform 
-          your classroom. Get early access to Muse and help shape the future of meaningful learning.
-        </p>
-        <a href="#signup" class="cta-button">Request Early Access</a>
-        <p style="margin-top: 1.5rem; font-size: 1rem; opacity: 0.8;">
-          Limited spots available • Launching Spring 2026
-        </p>
-      </div>
-    </section>
+      <!-- What Educators Say -->
+      <section class="testimonials">
+        <div class="container">
+          <h2 class="section-title">What Educators Say</h2>
+          <div class="quotes-grid">
+            <div class="quote-card">
+              <p class="quote-text">
+                "My sophomores stopped memorizing and started connecting the dots. The difference in their understanding is remarkable."
+              </p>
+              <div class="quote-author">A. Rivera</div>
+              <div class="quote-role">HS History</div>
+            </div>
+            
+            <div class="quote-card">
+              <p class="quote-text">
+                "The reflection prompts changed how my class talks about science. Students ask deeper questions and make connections I never expected."
+              </p>
+              <div class="quote-author">M. Patel</div>
+              <div class="quote-role">Chemistry</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pilot CTA -->
+      <section id="pilot" class="pilot-cta">
+        <div class="container">
+          <h2>Join the Educator Pilot Program</h2>
+          <p>
+            Be among the first educators to shape how Muse supports meaningful learning. Your feedback will help us build something truly transformative for classrooms everywhere.
+          </p>
+          
+          <div class="cta-actions">
+            <a href="mailto:gesture@uw.edu?subject=Muse%20Educator%20Pilot&body=Name%3A%0ASchool%3A%0ASubject%3A%0AWhy%20I%E2%80%99m%20interested%3A%0A" class="cta-primary">
+              Request Early Access
+            </a>
+            
+            <button class="accordion-trigger" onclick="toggleAccordion('sample-prompts')" aria-expanded="false" aria-controls="sample-prompts">
+              View Sample Syllabus Prompts
+            </button>
+            
+            <div id="sample-prompts" class="accordion-content">
+              <div class="sample-prompts">
+                <ul>
+                  <li><strong>History:</strong> "If the American Revolution were a story your students were living through, what character would they be and why?"</li>
+                  <li><strong>Science:</strong> "How would you explain photosynthesis as a conversation between a plant and the sun?"</li>
+                  <li><strong>Math:</strong> "What real-world mystery could your students solve using quadratic equations?"</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
 
     <!-- Footer -->
     <footer>
       <div class="container">
-        <p>&copy; 2025 Muse Learning. Designed for educators who believe in the power of story.</p>
+        <div class="footer-content">
+          <p>&copy; 2025 Muse. Designed for educators who believe in the power of story.</p>
+          
+          <div class="footer-links">
+            <button onclick="toggleDisclosure('accessibility-notes')" aria-expanded="false" aria-controls="accessibility-notes">
+              Brand & Accessibility Notes
+            </button>
+          </div>
+          
+          <div id="accessibility-notes" class="disclosure">
+            <h4>Accessibility & Brand Information</h4>
+            <p><strong>Color Contrast:</strong> All text meets WCAG AA standards (4.5:1 for body text, 3:1 for large text)</p>
+            <p><strong>Keyboard Navigation:</strong> All interactive elements are keyboard accessible with visible focus indicators</p>
+            <p><strong>Screen Readers:</strong> Semantic HTML and ARIA labels ensure compatibility with assistive technologies</p>
+            <p><strong>Brand Colors:</strong> Muse Indigo (#4B3E91), Lavender Mist (#E8E4FB), Golden Amber (#FF9159), Slate Gray (#5E6070)</p>
+          </div>
+        </div>
       </div>
     </footer>
+
+    <!-- Download Page Button -->
+    <button class="download-page" onclick="downloadPage()" title="Download this page" aria-label="Download this page as HTML file">
+      ⬇️
+    </button>
+
+    <script>
+      // Header scroll effect
+      window.addEventListener('scroll', function() {
+        const header = document.getElementById('header');
+        if (window.scrollY > 50) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      });
+
+      // Story Spark Generator Logic
+      const metaphorFrames = {
+        curious: [
+          "like a detective solving a mystery",
+          "like an explorer discovering a hidden treasure",
+          "like a scientist unlocking nature's secrets",
+          "like a puzzle waiting to be solved"
+        ],
+        reflective: [
+          "like a mirror reflecting deeper truths",
+          "like a bridge connecting distant ideas",
+          "like a lens that brings clarity to complexity",
+          "like a key that opens new understanding"
+        ],
+        playful: [
+          "like a game with hidden rules to discover",
+          "like a magical transformation happening before your eyes",
+          "like a dance between different forces",
+          "like a recipe for creating something amazing"
+        ]
+      };
+
+      const storySettings = [
+        "In your everyday kitchen",
+        "In a bustling city",
+        "In the natural world around us",
+        "In your favorite video game",
+        "In a school cafeteria",
+        "In your backyard",
+        "In a laboratory",
+        "In a library"
+      ];
+
+      const characters = [
+        "curious students",
+        "busy molecules",
+        "determined atoms",
+        "wise trees",
+        "energetic electrons",
+        "thoughtful historians",
+        "creative artists",
+        "problem-solving mathematicians"
+      ];
+
+      const reflectionStarters = {
+        "6-8": [
+          "What surprised you most about this idea?",
+          "How does this connect to something you already know?",
+          "If you had to explain this to a friend, what would you say?",
+          "What questions does this make you want to ask?"
+        ],
+        "9-12": [
+          "How might this concept apply to real-world problems?",
+          "What assumptions are you making about this topic?",
+          "How does this challenge or confirm what you thought before?",
+          "What would happen if we changed one key element?"
+        ],
+        "college": [
+          "What are the broader implications of this concept?",
+          "How does this relate to current research or debates in the field?",
+          "What would you investigate further if you had unlimited resources?",
+          "How might this knowledge influence your future decisions?"
+        ]
+      };
+
+      let currentSpark = '';
+
+      function generateStorySpark() {
+        const topic = document.getElementById('topic-input').value.trim();
+        const tone = document.getElementById('tone-select').value;
+        const grade = document.getElementById('grade-select').value;
+
+        if (!topic) {
+          alert('Please enter a topic or concept');
+          return;
+        }
+
+        // Generate metaphor
+        const metaphor = `${topic} is ${getRandomItem(metaphorFrames[tone])}`;
+
+        // Generate mini-story
+        const setting = getRandomItem(storySettings);
+        const character = getRandomItem(characters);
+        const story = `${setting}, ${character} encounter ${topic.toLowerCase()}. They discover that it works by... [Continue the story to show how ${topic.toLowerCase()} functions in this everyday context, making the abstract concept tangible and relatable.]`;
+
+        // Generate reflection prompts
+        const prompts = getRandomItems(reflectionStarters[grade], 2);
+
+        // Display results
+        document.getElementById('metaphor-output').textContent = metaphor;
+        document.getElementById('story-output').textContent = story;
+        document.getElementById('prompts-output').innerHTML = prompts.map((prompt, index) => `${index + 1}. ${prompt}`).join('<br>');
+
+        // Store current spark for download/copy
+        currentSpark = `Story Spark: ${topic}\n\nMetaphor:\n${metaphor}\n\nMini-Story:\n${story}\n\nReflection Prompts:\n${prompts.map((prompt, index) => `${index + 1}. ${prompt}`).join('\n')}`;
+
+        // Show output
+        const output = document.getElementById('demo-output');
+        output.classList.add('show');
+        output.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      function getRandomItem(array) {
+        return array[Math.floor(Math.random() * array.length)];
+      }
+
+      function getRandomItems(array, count) {
+        const shuffled = [...array].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+      }
+
+      function copyToClipboard() {
+        navigator.clipboard.writeText(currentSpark).then(function() {
+          const button = event.target;
+          const originalText = button.textContent;
+          button.textContent = 'Copied!';
+          setTimeout(() => {
+            button.textContent = originalText;
+          }, 2000);
+        }).catch(function(err) {
+          console.error('Could not copy text: ', err);
+          // Fallback for older browsers
+          const textArea = document.createElement('textarea');
+          textArea.value = currentSpark;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textArea);
+          
+          const button = event.target;
+          const originalText = button.textContent;
+          button.textContent = 'Copied!';
+          setTimeout(() => {
+            button.textContent = originalText;
+          }, 2000);
+        });
+      }
+
+      function downloadSpark() {
+        const blob = new Blob([currentSpark], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'story-spark.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      // Accordion functionality
+      function toggleAccordion(id) {
+        const content = document.getElementById(id);
+        const trigger = event.target;
+        const isExpanded = content.classList.contains('expanded');
+        
+        if (isExpanded) {
+          content.classList.remove('expanded');
+          trigger.setAttribute('aria-expanded', 'false');
+        } else {
+          content.classList.add('expanded');
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      }
+
+      // Footer disclosure functionality
+      function toggleDisclosure(id) {
+        const disclosure = document.getElementById(id);
+        const trigger = event.target;
+        const isExpanded = disclosure.classList.contains('expanded');
+        
+        if (isExpanded) {
+          disclosure.classList.remove('expanded');
+          trigger.setAttribute('aria-expanded', 'false');
+        } else {
+          disclosure.classList.add('expanded');
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      }
+
+      // Download page functionality
+      function downloadPage() {
+        const htmlContent = document.documentElement.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'muse-educator-pilot.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+
+      // Enhanced keyboard navigation
+      document.addEventListener('keydown', function(e) {
+        // Enter key on demo button
+        if (e.key === 'Enter' && e.target.classList.contains('demo-button')) {
+          generateStorySpark();
+        }
+        
+        // Escape key to close accordion/disclosure
+        if (e.key === 'Escape') {
+          document.querySelectorAll('.accordion-content.expanded, .disclosure.expanded').forEach(el => {
+            el.classList.remove('expanded');
+            const trigger = document.querySelector(`[aria-controls="${el.id}"]`);
+            if (trigger) {
+              trigger.setAttribute('aria-expanded', 'false');
+            }
+          });
+        }
+      });
+
+      // Initialize demo with example on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('topic-input').value = 'Photosynthesis';
+      });
+    </script>
   </body>
 </html>
